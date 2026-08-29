@@ -15,7 +15,7 @@ Szczegóły i liczby uzasadniające każdą linijkę w odpowiednich
 podfolderach niżej.
 
 Repozytorium zbierające **wyniki empirycznych testów i audytów**
-twierdzeń o TIMDR wykonanych w tej sesji — cztery niezależne wątki,
+twierdzeń o TIMDR wykonanych w tej sesji — pięć niezależnych wątków,
 każdy z pre-rejestracją, kontrolą negatywną i uczciwym raportem
 niezależnie od wyniku. To nie jest kolekcja gotowych produktów — to
 zapis tego, co faktycznie sprawdzono, co się potwierdziło, a co
@@ -69,12 +69,31 @@ metody detekcji anomalii bez nadzoru (anomalie muszą być rzadkie)
 przestaje działać, gdy nie jest spełnione, niezależnie od
 wyrafinowania architektury wokół niego.
 
-## Zasada wspólna dla wszystkich czterech wątków
+### [`seismology-sta-lta/`](seismology-sta-lta/)
+Test pytania z rozmowy: przy ciągłym monitorowaniu sejsmologicznym,
+czy trzęsienie jest "rzadkim sygnałem" (pasuje do założeń v4), a rój
+wstrząsów wtórnych łamie to założenie jak scenariusz B (klaster) w
+`defect-operator`? Użyto PRAWDZIWEGO, standardowego algorytmu
+sejsmologicznego (STA/LTA, Allen 1978), nie autorskiej metody.
+**Wynik: hipoteza częściowo potwierdzona, z ważnym zastrzeżeniem.**
+STA/LTA jako iloraz jest z natury odporny na powolną zmianę tła (bez
+osobnego modułu regime-change, w przeciwieństwie do `defect-operator`).
+Izolowane trzęsienie: 100% wykrycia. Rój wstrząsów wtórnych: realna
+degradacja (do 37% dla późnych, odosobnionych wstrząsów), ale NIE
+katastroficzne zapadnięcie jak w scenariuszu B (2,4%) — mechanizm
+okazał się inny niż "zatruta referencja": krótkie okno STA dopasowane
+do skali pojedynczego zdarzenia daje wyraźnie lepszą odporność niż
+zliczenia/entropia na dużych oknach z poprzedniego testu.
+
+## Zasada wspólna dla wszystkich pięciu wątków
 
 Pre-rejestracja (obiekt/metryka/model zerowy ustalone przed
 uruchomieniem) → uruchomienie raz → raport niezależnie od tego, czy
 wynik jest wygodny. Dwa wątki dały wynik solidny (cosmology-filters,
-częściowo defect-operator v4), dwa dały falsyfikację (radar-prime-
-transfer, torsion-operator jako praktyczne narzędzie), a defect-
-operator pokazał, że nawet naprawiona architektura ma granicę
-strukturalną, nie tylko techniczną.
+częściowo defect-operator v4 i seismology-sta-lta), dwa dały
+falsyfikację (radar-prime-transfer, torsion-operator jako praktyczne
+narzędzie), a defect-operator pokazał, że nawet naprawiona architektura
+ma granicę strukturalną, nie tylko techniczną — natomiast
+seismology-sta-lta pokazał, że ta sama granica (częste, nakładające się
+zdarzenia) może być złagodzona, choć nie usunięta, przez dobór
+architektury dopasowanej do skali zjawiska.
